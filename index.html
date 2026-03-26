@@ -1,21 +1,42 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>El Escritor — Tu libro nace aquí</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>El Escritor — Tu libro nace aquí</title>
 
-<link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
 <div class="app">
-  <h1>El Escritor</h1>
+  <h1>📖 El Escritor</h1>
 
   <textarea id="inputText" placeholder="Escribe tu idea..."></textarea>
 
-  <button onclick="generateBook()">Escribir el libro</button>
+  <div class="controls">
+    <select id="genre">
+      <option value="fantasia">Fantasía</option>
+      <option value="terror">Terror</option>
+      <option value="romance">Romance</option>
+      <option value="ciencia">Ciencia ficción</option>
+    </select>
+
+    <select id="tone">
+      <option value="epico">Épico</option>
+      <option value="oscuro">Oscuro</option>
+      <option value="dramatico">Dramático</option>
+      <option value="poetico">Poético</option>
+    </select>
+  </div>
+
+  <button onclick="generateBook()">✨ Generar libro</button>
+
+  <div class="actions">
+    <button onclick="copyText()">📋 Copiar</button>
+    <button onclick="downloadText()">⬇ Descargar</button>
+  </div>
 
   <div id="output">Aquí aparecerá tu historia...</div>
 </div>
