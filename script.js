@@ -14,6 +14,8 @@ async function generateBook(){
   output.innerText = "⏳ Generando historia con IA...";
 
   try {
+    console.log("🚀 Enviando request a:", API_URL);
+
     const response = await fetch(API_URL, {
       method: "POST",
       headers: {
@@ -22,17 +24,32 @@ async function generateBook(){
       body: JSON.stringify({ input, genre, tone })
     });
 
+    console.log("📡 Status:", response.status);
+
+    // 👇 SI EL BACKEND RESPONDE MAL, LO VEMOS
+    if (!response.ok) {
+      const text = await response.text();
+      console.error("❌ Error backend:", text);
+      throw new Error("Backend: " + text);
+    }
+
     const data = await response.json();
+
+    console.log("✅ Respuesta:", data);
 
     if(data.result){
       output.innerText = data.result;
     } else {
-      output.innerText = "⚠️ No se recibió respuesta válida";
+      output.innerText = "⚠️ Respuesta vacía del servidor";
     }
 
   } catch (error) {
-    console.error(error);
-    output.innerText = "❌ Error conectando con la IA";
+    console.error("🔥 ERROR TOTAL:", error);
+
+    output.innerText =
+      "❌ Error real:\n\n" +
+      error.message +
+      "\n\n(Abre consola para más detalles)";
   }
 }
 
