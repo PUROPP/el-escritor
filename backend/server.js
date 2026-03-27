@@ -13,12 +13,12 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
-// 🔹 Ruta base (para evitar "Cannot GET /")
+// ✅ Ruta base
 app.get("/", (req, res) => {
   res.send("🚀 Servidor de El Escritor funcionando");
 });
 
-// 🔹 Ruta principal IA
+// ✅ Ruta IA
 app.post("/generate", async (req, res) => {
   try {
     const { input, genre, tone } = req.body;
@@ -33,9 +33,9 @@ app.post("/generate", async (req, res) => {
 Eres un escritor profesional.
 
 Escribe un inicio de libro con:
-- Idea: ${input}
-- Género: ${genre}
-- Tono: ${tone}
+Idea: ${input}
+Género: ${genre}
+Tono: ${tone}
 
 Incluye:
 - Título
@@ -43,15 +43,16 @@ Incluye:
 - Narrativa envolvente
 `;
 
-    const response = await openai.chat.completions.create({
+    console.log("📩 Prompt enviado:", prompt);
+
+    const response = await openai.responses.create({
       model: "gpt-5-mini",
-      messages: [
-        { role: "system", content: "Eres un novelista experto." },
-        { role: "user", content: prompt }
-      ]
+      input: prompt
     });
 
-    const text = response?.choices?.[0]?.message?.content;
+    console.log("🤖 Respuesta OpenAI:", response);
+
+    const text = response?.output?.[0]?.content?.[0]?.text;
 
     if (!text) {
       return res.json({
@@ -64,17 +65,18 @@ Incluye:
     });
 
   } catch (error) {
-    console.error("ERROR IA:", error);
+    console.error("🔥 ERROR REAL OPENAI:", error);
 
     res.status(500).json({
-      result: "❌ Error generando historia con IA"
+      result: "❌ Error generando historia con IA",
+      detalle: error.message
     });
   }
 });
 
-// 🔹 Puerto dinámico (IMPORTANTE para Render)
+// ✅ Puerto dinámico (CRÍTICO)
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log("Servidor listo en puerto " + PORT);
+  console.log("🚀 Servidor corriendo en puerto " + PORT);
 });
