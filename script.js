@@ -1,4 +1,6 @@
-function generateBook(){
+const API_URL = "https://el-escritor.onrender.com/generate";
+
+async function generateBook(){
   const input = document.getElementById("inputText").value.trim();
   const genre = document.getElementById("genre").value;
   const tone = document.getElementById("tone").value;
@@ -8,64 +10,30 @@ function generateBook(){
     return;
   }
 
-  const titles = [
-    "El destino oculto",
-    "Sombras del mañana",
-    "El despertar eterno",
-    "Crónicas del origen"
-  ];
+  const output = document.getElementById("output");
+  output.innerText = "⏳ Generando historia con IA...";
 
-  const title = titles[Math.floor(Math.random()*titles.length)];
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ input, genre, tone })
+    });
 
-  let intro = "";
+    const data = await response.json();
 
-  switch(genre){
-    case "fantasia":
-      intro = "En un reino olvidado...";
-      break;
-    case "terror":
-      intro = "Nadie debía haber abierto esa puerta...";
-      break;
-    case "romance":
-      intro = "Todo comenzó con una mirada...";
-      break;
-    case "ciencia":
-      intro = "En un futuro lejano...";
-      break;
+    if(data.result){
+      output.innerText = data.result;
+    } else {
+      output.innerText = "⚠️ No se recibió respuesta válida";
+    }
+
+  } catch (error) {
+    console.error(error);
+    output.innerText = "❌ Error conectando con la IA";
   }
-
-  let estilo = "";
-
-  switch(tone){
-    case "epico":
-      estilo = "El destino de todos dependía de ello.";
-      break;
-    case "oscuro":
-      estilo = "La oscuridad lo consumía todo.";
-      break;
-    case "dramatico":
-      estilo = "Nada volvería a ser igual.";
-      break;
-    case "poetico":
-      estilo = "Cada palabra parecía poesía.";
-      break;
-  }
-
-  const historia = `
-📖 ${title}
-
-Capítulo I
-
-${intro} ${input}
-
-${estilo}
-
-Capítulo II
-
-Las consecuencias apenas comenzaban...
-`;
-
-  document.getElementById("output").innerText = historia;
 }
 
 function copyText(){
